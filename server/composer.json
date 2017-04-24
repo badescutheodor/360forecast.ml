@@ -1,0 +1,10 @@
+{
+    "name": "theo/server",
+    "authors": [
+        {
+            "name": "Badescu Theodor",
+            "email": "theo@btheo.com"
+        }
+    ],
+    "require": {}
+}
