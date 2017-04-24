@@ -42,8 +42,8 @@ class Application
             return new Noodlehaus\Config('./config');
         };
 
-        $this->container['server'] = function($c) {
-            return new Server($c);
+        $this->container['server'] = function($container) {
+            return new Server($container);
         };
     }
 }
