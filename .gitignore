@@ -1,1 +1,3 @@
 .idea
+server/storage/logs
+client/node_modules

@@ -8,5 +8,10 @@
     "build": "vbuild index.js"
   },
   "author": "Badescu Theodor <theo@btheo.com>",
-  "license": "Apache License"
+  "license": "Apache License",
+  "dependencies": {
+    "node-sass": "^4.5.2",
+    "sass-loader": "^6.0.3",
+    "vue-router": "^2.5.1"
+  }
 }
