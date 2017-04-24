@@ -33,7 +33,7 @@ class Server
      */
     public function boot() {
         $port = $this->container['config']->get('port');
-        $this->container['logger']->info(sprintf('Starting the socket server on port %d.', $port));
+        note('info', sprintf('Starting the socket server on port %d.', $port));
         $this->server = IoServer::factory(new HttpServer(new WsServer(new Weather($this->container))), $port);
         $this->server->run();
     }

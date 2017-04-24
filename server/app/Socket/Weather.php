@@ -25,7 +25,7 @@ class Weather implements MessageComponentInterface
      * @param ConnectionInterface $connection
      */
     public function onOpen(ConnectionInterface $connection) {
-        $this->container['logger']->info(sprintf('A new connection was made from IP: %s', $connection->remoteAddress));
+        note('info', sprintf('A new connection was made from IP: %s', $connection->remoteAddress));
     }
 
     /**
