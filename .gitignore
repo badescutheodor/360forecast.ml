@@ -1,3 +1,5 @@
 .idea
 server/storage/logs
+server/.env
+server/vendor
 client/node_modules
