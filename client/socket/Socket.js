@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 /**
  * Simple WebSocket wrapper
  */
@@ -8,12 +10,12 @@ export default class Socket {
      * @param options
      */
     constructor(host, options) {
+        this.events  = {};
         this.host    = host;
         this.options = Object.assign({
             reconnect: true,
             interval: 1000
         }, options);
-
         this.connect();
     }
 
@@ -21,7 +23,7 @@ export default class Socket {
      * On socket connection
      */
     onConnection() {
-        console.log('Connected');
+        _.has(this.events, 'connection')  && _.each(this.events.connection, (callback) => { callback() });
     }
 
     /**
@@ -32,9 +34,13 @@ export default class Socket {
         try
         {
             let data    = JSON.parse(message.data);
-
             let event   = data[0];
             let payload = data[1];
+
+            if ( _.has(this.events, event) )
+            {
+                _.each(this.events[event], (callback) => { callback(payload); })
+            }
         }
         catch(error)
         {
@@ -46,9 +52,32 @@ export default class Socket {
      * On connection close
      */
     onClose() {
-        if ( this.options.reconnect ) {
-            setTimeout(() => this.connect(), this.options.interval);
+        this.options.reconnect && setTimeout(() => this.connect, this.options.interval);
+    }
+
+    /**
+     * Emit an event to server
+     *
+     * @param event
+     * @param payload
+     */
+    emit(event, payload) {
+        this.socket.send(JSON.stringify([event, payload]));
+    }
+
+    /**
+     * Register an event to events object
+     * @param event
+     * @param callback
+     */
+    on(event, callback) {
+        if ( !_.has(this.events, event) )
+        {
+            this.events[event] = [callback];
+            return;
         }
+
+        this.events[event].push(callback);
     }
 
     /**
@@ -56,9 +85,9 @@ export default class Socket {
      * @private
      */
     _bind() {
-        this.onopen    = this.onConnection;
-        this.onmessage = this.onMessage;
-        this.onclose   = this.onClose;
+        this.socket.onopen    = this.onConnection.bind(this);
+        this.socket.onmessage = this.onMessage.bind(this);
+        this.socket.onclose   = this.onClose.bind(this);
     }
 
     /**

@@ -11,6 +11,7 @@
   "license": "Apache License",
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "lodash": "^4.17.4",
     "node-sass": "^4.5.2",
     "sass-loader": "^6.0.3",
     "vue-router": "^2.5.1"
