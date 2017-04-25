@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import { router } from './router'
 import { socket } from './socket'
+import { SOCKET_SET_IDENTIFICATION } from './constants'
 
 import Root from './components/Root.vue'
 import './styles/app.scss'
@@ -31,5 +32,10 @@ const data = () => {
 new Vue({
     router,
     data,
+    mounted() {
+        this.socket.on(SOCKET_SET_IDENTIFICATION, identity => {
+            localStorage.setItem('identity', identity);
+        });
+    },
     render: (h) => h(Root)
 }).$mount('#app');

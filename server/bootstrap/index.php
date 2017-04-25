@@ -62,6 +62,14 @@ class Application
         };
 
         /**
+         * Boot Eloquent
+         */
+
+        $capsule = new Illuminate\Database\Capsule\Manager();
+        $capsule->addConnection($this->container['config']->get('sqlite'));
+        $capsule->bootEloquent();
+
+        /**
          * @param $container
          * @return Server
          */

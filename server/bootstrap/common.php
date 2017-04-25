@@ -13,6 +13,17 @@ function note($type, $message) {
 }
 
 /**
+ * Short function for config
+ *
+ * @param $item
+ */
+
+function config($item) {
+    global $app;
+    return $app->get('config')->get($item);
+}
+
+/**
  * Helper for getting root folder path
  * @return string
  */
@@ -26,4 +37,12 @@ function rootPath() {
  */
 function appPath() {
     return ROOT_PATH.'/app';
+}
+
+/**
+ * Sanitize the data for the socket
+ * transport
+ */
+function sanitize($name, $payload) {
+    return json_encode([$name, $payload]);
 }
