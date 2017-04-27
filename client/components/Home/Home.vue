@@ -1,5 +1,17 @@
+<style lang="scss">
+    p {
+        font: 14px Montserrat;
+    }
+</style>
+
 <template>
-    <h1>Home</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>

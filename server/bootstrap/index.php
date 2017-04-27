@@ -45,6 +45,12 @@ class Application
         $dotenv->load();
 
         /**
+         * Set default date time to UTC
+         */
+
+        date_default_timezone_set('UTC');
+
+        /**
          * @return \Monolog\Logger
          */
         $this->container['logger'] = function() {
@@ -67,6 +73,7 @@ class Application
 
         $capsule = new Illuminate\Database\Capsule\Manager();
         $capsule->addConnection($this->container['config']->get('sqlite'));
+        $capsule->setAsGlobal();
         $capsule->bootEloquent();
 
         /**

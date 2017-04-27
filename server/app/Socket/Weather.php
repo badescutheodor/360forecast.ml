@@ -5,14 +5,14 @@ namespace App\Socket;
 use Pimple\Container;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
-use Defuse\Crypto\Crypto;
-use Defuse\Crypto\Key;
-use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
+use App\Socket\Authenticable;
 use App\Models\Search;
 use App\Socket\Constants;
 
 class Weather implements MessageComponentInterface
 {
+    use Authenticable;
+
     /**
      * @var $container
      */
@@ -52,7 +52,8 @@ class Weather implements MessageComponentInterface
 
         if ( !$parsed["identity"] )
         {
-            $identity = Crypto::encrypt(uniqid(), Key::loadFromAsciiSafeString(config('secret')));
+            note('info', sprintf("A new socket connection with resourceId [%s] was created, sending identity."), $connection->resourceId);
+            $identity = $this->makeIdentity();
             $connection->send(sanitize(Constants::SOCKET_SET_IDENTIFICATION, $identity));
             $connection->identifier = $identity;
             return;
@@ -63,19 +64,17 @@ class Weather implements MessageComponentInterface
          * else send a new one
          */
 
-        try
+        if ( $identity = $this->getIdentity($parsed['identity']) )
         {
-            $identity = Crypto::decrypt($parsed["identity"], Key::loadFromAsciiSafeString(config('secret')));
+            note('info', sprintf("User with identification [%s] has connected.", $identity));
+            $connection->identifier = $identity;
         }
-        catch(WrongKeyOrModifiedCiphertextException $exception)
+        else
         {
             note('error', sprintf("Could not decrypt identity %s, sending a new one to user.", $parsed["identity"]));
-            $identity = Crypto::encrypt(uniqid(), Key::loadFromAsciiSafeString(config('secret')));
+            $identity = $this->makeIdentity();
             $connection->send(sanitize(Constants::SOCKET_SET_IDENTIFICATION, $identity));
         }
-
-        note('info', sprintf("User with identification [%s] has connected.", $identity));
-        $connection->identifier = $identity;
     }
 
     /**
@@ -83,7 +82,7 @@ class Weather implements MessageComponentInterface
      * @param string $message
      */
     public function onMessage(ConnectionInterface $from, $message) {
-
+        print_r($message);
     }
 
     /**
