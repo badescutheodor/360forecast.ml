@@ -167,7 +167,6 @@
                 let items = [];
 
                 _.each(list, (item) => {
-                    console.log(item);
                     items.push({
                         day: moment(item.dt * 1000).format('dddd'),
                         temperature: `${item.temp.day.toFixed(0)} °C`,
