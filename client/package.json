@@ -15,8 +15,10 @@
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "node-sass": "^4.5.2",
+    "noty": "^3.1.0",
     "sass-loader": "^6.0.3",
     "vue-google-autocomplete": "^1.0.8",
+    "vue-js-toggle-button": "^1.0.8",
     "vue-router": "^2.5.1"
   }
 }

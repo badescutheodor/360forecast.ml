@@ -7,11 +7,12 @@ use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use App\Socket\Authenticable;
 use App\Socket\Weatherable;
+use App\Socket\Settings;
 use App\Socket\Constants;
 
 class Weather implements MessageComponentInterface
 {
-    use Authenticable, Weatherable;
+    use Authenticable, Weatherable, Settings;
 
     /**
      * @var $container

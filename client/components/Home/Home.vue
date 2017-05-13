@@ -1,5 +1,6 @@
 <template>
     <div>
+        <settings-modal></settings-modal>
         <search></search>
         <div class="container"
              v-bind:class="{blurred: isBlurred}">
@@ -14,6 +15,7 @@
     import Search from './Search.vue'
     import Forecast from './Forecast.vue'
     import Weather from './Weather.vue'
+    import SettingsModal from './SettingsModal.vue'
     import events from '../../events'
     import {
         EVENT_SHOW_OVERLAY,
@@ -60,7 +62,8 @@
         components: {
             search: Search,
             forecast: Forecast,
-            weather: Weather
+            weather: Weather,
+            'settings-modal': SettingsModal
         }
     }
 </script>

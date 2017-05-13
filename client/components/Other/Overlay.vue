@@ -21,7 +21,8 @@
     import {
         EVENT_SHOW_OVERLAY,
         EVENT_HIDE_OVERLAY,
-        EVENT_HIDE_SEARCH
+        EVENT_HIDE_SEARCH,
+        EVENT_HIDE_SETTINGS
     } from '../../constants'
 
     export default {
@@ -43,6 +44,7 @@
 
             hideOverlay() {
                 events.$emit(EVENT_HIDE_SEARCH);
+                events.$emit(EVENT_HIDE_SETTINGS);
                 this.isOpen = false;
             }
         }

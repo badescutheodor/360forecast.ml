@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import Noty from 'noty';
 
 /**
  * Returnz weather icon from id
@@ -7,4 +8,13 @@ import _ from 'lodash'
  */
 export const iconize = (id) => {
     //
+};
+
+/**
+ *
+ * @param type
+ * @param messaage
+ */
+export const notify = (type, message) => {
+    new Noty({ type, text: message }).show();
 };

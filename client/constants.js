@@ -17,8 +17,10 @@ export const SOCKET_ACTION_SEARCH      = 'action:search';
  * Client events
  * @type {string}
  */
-export const EVENT_SHOW_OVERLAY = 'show-overlay';
-export const EVENT_HIDE_OVERLAY = 'hide-overlay';
-export const EVENT_SHOW_SEARCH  = 'show-search';
-export const EVENT_HIDE_SEARCH  = 'hide-search';
-export const EVENT_DATA_LOADED  = 'data-loaded';
+export const EVENT_SHOW_OVERLAY  = 'show-overlay';
+export const EVENT_HIDE_OVERLAY  = 'hide-overlay';
+export const EVENT_SHOW_SEARCH   = 'show-search';
+export const EVENT_HIDE_SEARCH   = 'hide-search';
+export const EVENT_SHOW_SETTINGS = 'show-settings';
+export const EVENT_HIDE_SETTINGS = 'hide-settings';
+export const EVENT_DATA_LOADED   = 'data-loaded';

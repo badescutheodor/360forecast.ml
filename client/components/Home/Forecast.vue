@@ -94,13 +94,37 @@
             }
         }
     }
+
+    .settings-button {
+        background: transparent;
+        border: 2px solid #fff;
+        width: 45px;
+        height: 45px;
+        border-radius: 45px;
+        position: relative;
+        bottom: 8px;
+        margin-right: 11px;
+
+        span {
+            font-size: 19px;
+        }
+    }
+
+    .settings-button, .heading {
+        display: inline-block;
+    }
 </style>
 
 <template>
     <div class="row forecast" v-if="!isLoading">
         <div class="col-lg-12">
-            <h3>Weather forecast</h3>
-            <p>5 days forecast</p>
+            <button type="button" @click="showSettings" class="settings-button">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+            </button>
+            <div class="heading">
+                <h3>Weather forecast</h3>
+                <p>5 days forecast</p>
+            </div>
         </div>
         <div class="col-lg-12">
             <div class="table">
@@ -137,11 +161,14 @@
 </template>
 
 <script>
+    import SettingsModal from './SettingsModal.vue'
     import events from '../../events'
     import _ from 'lodash'
     import moment from 'moment'
     import {
-        EVENT_DATA_LOADED
+        EVENT_DATA_LOADED,
+        EVENT_SHOW_OVERLAY,
+        EVENT_SHOW_SETTINGS
     } from '../../constants'
 
     export default {
@@ -155,8 +182,12 @@
                 isLoading: true
             }
         },
-
         methods: {
+            showSettings() {
+                events.$emit(EVENT_SHOW_OVERLAY);
+                events.$emit(EVENT_SHOW_SETTINGS);
+            },
+
             loadData(data) {
                 if ( data.response
                     && data.response.cod === '404' )

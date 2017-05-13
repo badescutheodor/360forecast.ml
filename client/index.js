@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import ToggleButton from 'vue-js-toggle-button'
 
 import { router } from './router'
 import { socket } from './socket'
@@ -13,6 +14,7 @@ import './styles/app.scss'
  */
 
 Vue.use(VueRouter);
+Vue.use(ToggleButton);
 
 /**
  * Initial data
