@@ -1,7 +1,5 @@
 <?php
 
-// sudo certbot certonly --webroot --webroot-path=/usr/local/src/360forecast.ml/client/dist -d 360forecast.ml -d www.360forecast.ml
-
 namespace App\Socket;
 
 use Pimple\Container;
