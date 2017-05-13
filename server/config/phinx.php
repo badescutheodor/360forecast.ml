@@ -9,7 +9,7 @@ return [
         'default_migration_table' => 'phinxlog',
         'dev' => [
             'adapter'  => 'sqlite',
-            'name' => '../../storage/database/database.sqlite'
+            'name' => 'C:\Users\theo\Desktop\360forecast.ml\server\storage\database\database.sqlite'
         ]
     ]
 ];

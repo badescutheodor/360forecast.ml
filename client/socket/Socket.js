@@ -20,6 +20,18 @@ export default class Socket {
     }
 
     /**
+     * Reconnects to the socket server
+     */
+    reconnect() {
+        if ( this.socket )
+        {
+            delete this.socket;
+        }
+
+        this.connect();
+    }
+
+    /**
      * On socket connection
      */
     onConnection() {

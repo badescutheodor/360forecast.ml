@@ -6,12 +6,12 @@ use Pimple\Container;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use App\Socket\Authenticable;
-use App\Models\Search;
+use App\Socket\Weatherable;
 use App\Socket\Constants;
 
 class Weather implements MessageComponentInterface
 {
-    use Authenticable;
+    use Authenticable, Weatherable;
 
     /**
      * @var $container
@@ -29,7 +29,7 @@ class Weather implements MessageComponentInterface
      */
     public function __construct(Container $container) {
         $this->container   = $container;
-        $this->connections = new \SplObjectStorage;
+        $this->connections = [];
     }
 
     /**
@@ -38,12 +38,6 @@ class Weather implements MessageComponentInterface
     public function onOpen(ConnectionInterface $connection) {
         note('info', sprintf('A new connection was made from IP: %s', $connection->remoteAddress));
         parse_str($connection->WebSocket->request->getQuery(), $parsed);
-
-        /**
-         * Attach the connection
-         */
-
-        $this->connections->attach($connection);
 
         /**
          * Set an identity if it does not
@@ -75,6 +69,26 @@ class Weather implements MessageComponentInterface
             $identity = $this->makeIdentity();
             $connection->send(sanitize(Constants::SOCKET_SET_IDENTIFICATION, $identity));
         }
+
+        /**
+         * Send the initial weather data based
+         * on user's IP
+         */
+
+        if ( $connection->remoteAddress == '127.0.0.1' )
+        {
+            $connection->remoteAddress = '94.231.116.134';
+        }
+
+        $location = $this->getLocation($connection->remoteAddress);
+        $response = $this->getWeather($identity, $location, 5);
+        $connection->send(sanitize(Constants::SOCKET_ACTION_SEARCH, $response));
+
+        /**
+         * Attach the connection
+         */
+
+        $this->connections[$connection->resourceId] = $connection;
     }
 
     /**
@@ -82,7 +96,24 @@ class Weather implements MessageComponentInterface
      * @param string $message
      */
     public function onMessage(ConnectionInterface $from, $message) {
-        print_r($message);
+        $parsed = json_decode($message);
+        $event  = $parsed[0];
+        $data   = $parsed[1];
+
+        switch ( $event )
+        {
+            case Constants::SOCKET_ACTION_SEARCH:
+            {
+                note('info', sprintf("Client with id %s is trying to search for %s.", $from->resourceId, $message));
+                $response = $this->getWeather($this->connections[$from->resourceId]->identifier, $data, 5);
+                $from->send(sanitize(Constants::SOCKET_ACTION_SEARCH, $response));
+            } break;
+
+            default:
+            {
+                note('info', sprintf("Client with id %s has tried to send invalid action %s to socket server.", $from->resourceId, $event));
+            } break;
+        }
     }
 
     /**
@@ -94,7 +125,7 @@ class Weather implements MessageComponentInterface
          */
 
         note('info', sprintf("Client with id %s has disconnected.", $connection->resourceId));
-        $this->connections->detach($connection);
+        unset($this->connections[$connection->resourceId]);
     }
 
     /**

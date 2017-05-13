@@ -2,3 +2,7 @@ body {
   background: $light-blue;
   color: $font-main;
 }
+
+.blurred {
+  filter: blur(5px);
+}
