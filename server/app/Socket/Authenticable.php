@@ -5,6 +5,7 @@ namespace App\Socket;
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
 use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
+use GuzzleHttp\Client;
 
 
 trait Authenticable
@@ -42,7 +43,9 @@ trait Authenticable
 
         try
         {
-            $location = json_decode(file_get_contents('http://ip-api.com/json/'.$ip));
+            $client   = new Client();
+            $response = $client->request('GET', 'http://ip-api.com/json/'.$ip);
+            $location = json_decode($response->getBody());
             return property_exists($location, 'city') ? $location->city : false;
         }
         catch(Exception $e)

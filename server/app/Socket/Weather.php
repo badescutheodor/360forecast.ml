@@ -1,5 +1,7 @@
 <?php
 
+// sudo certbot certonly --webroot --webroot-path=/usr/local/src/360forecast.ml/client/dist -d 360forecast.ml -d www.360forecast.ml
+
 namespace App\Socket;
 
 use Pimple\Container;
@@ -36,8 +38,10 @@ class Weather implements MessageComponentInterface
      * @param ConnectionInterface $connection
      */
     public function onOpen(ConnectionInterface $connection) {
-        print_r($connection->WebSocket->request->getHeaders());
-        note('info', sprintf('A new connection was made from IP: %s', $connection->WebSocket->request->getHeaders()['x-forwarded-for']));
+        $ip = isset($connection->WebSocket->request->getHeaders()['x-forwarded-for']) ? $connection->WebSocket->request->getHeaders()['x-forwarded-for'] : $connection->remoteAddress;
+
+
+        note('info', sprintf('A new connection was made from IP: %s', $ip));
         parse_str($connection->WebSocket->request->getQuery(), $parsed);
 
         /**
@@ -76,12 +80,12 @@ class Weather implements MessageComponentInterface
          * on user's IP
          */
 
-        if ( $connection->remoteAddress == '127.0.0.1' )
+        if ( $ip == '127.0.0.1' )
         {
-            $connection->remoteAddress = '94.231.116.134';
+            $ip = '94.231.116.134';
         }
 
-        $location = $this->getLocation($connection->WebSocket->request->getHeaders()['x-forwarded-for']);
+        $location = $this->getLocation($ip);
         $response = $this->getWeather($identity, $location, 5);
         $connection->send(sanitize(Constants::SOCKET_ACTION_SEARCH, $response));
 

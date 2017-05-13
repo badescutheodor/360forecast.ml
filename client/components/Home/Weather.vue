@@ -71,7 +71,7 @@
 </style>
 
 <template>
-    <div class="row">
+    <div class="row" v-if="!isLoading">
         <div class="data col-lg-8 col-md-8 col-sm-8 col-xs-12">
             <div class="weather-icon">
                 <i class="wi icon" v-bind:class="icon"></i>
@@ -108,7 +108,8 @@
             return {
                 location: false,
                 temperature: false,
-                icon: false
+                icon: false,
+                isLoading: true
             }
         },
 
@@ -129,6 +130,7 @@
                 this.icon        = `wi-owm-${res.list[0].weather[0].id}`;
                 this.location    = `${res.city.name}, ${_.capitalize(res.city.country)}`;
                 this.temperature = `${_.capitalize(res.list[0].weather[0].description)}, ${res.list[0].temp.day.toFixed(0)} °C`;
+                this.isLoading   = false;
             }
         }
     }

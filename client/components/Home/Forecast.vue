@@ -96,7 +96,7 @@
 </style>
 
 <template>
-    <div class="row forecast">
+    <div class="row forecast" v-if="!isLoading">
         <div class="col-lg-12">
             <h3>Weather forecast</h3>
             <p>5 days forecast</p>
@@ -150,7 +150,8 @@
 
         data() {
             return {
-                items: []
+                items: [],
+                isLoading: true
             }
         },
 
@@ -177,7 +178,8 @@
                     });
                 });
 
-                this.items = items;
+                this.items     = items;
+                this.isLoading = false;
             }
         }
     }
