@@ -21,6 +21,7 @@
                 padding: 0 5px;
                 margin-right: 7px;
                 border-top: 8px solid #00497d;
+                border-radius: 2px;
 
                 .header {
                     font-size: 19px;

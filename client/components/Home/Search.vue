@@ -19,12 +19,13 @@
     .search-box #location {
         margin: 45px 0;
         z-index: 4;
-        position: absolute;
+        position: relative;
         background: none;
         border: none;
         color: #fff;
         font-size: 32px;
         width: 100%;
+        margin-bottom: -82px;
 
         @media (max-width: 650px) {
             & {

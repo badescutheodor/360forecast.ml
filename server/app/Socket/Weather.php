@@ -47,7 +47,7 @@ class Weather implements MessageComponentInterface
          * have one already
          */
 
-        if ( !$parsed["identity"] )
+        if ( !isset($parsed["identity"]) )
         {
             note('info', sprintf("A new socket connection with resourceId [%s] was created, sending identity."), $connection->resourceId);
             $identity = $this->makeIdentity();

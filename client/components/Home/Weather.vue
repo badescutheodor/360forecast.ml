@@ -65,7 +65,7 @@
         button {
             float: none !important;
             display: block;
-            margin: 0 auto;
+            margin: 0 auto !important;
         }
     }
 </style>

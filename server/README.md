@@ -9,3 +9,6 @@ Create migration:
 
 Run migrations: 
 `./phinx migrate -c ../../config/phinx.php`
+
+## Socket Server
+To run the socket server in background use `nohup php index.php > /dev/null 2>&1&`
