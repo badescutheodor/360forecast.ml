@@ -42,7 +42,7 @@ trait Authenticable
 
         try
         {
-            $location = json_decode(file_get_contents('http://freegeoip.net/json/'.$ip));
+            $location = json_decode(file_get_contents('http://ip-api.com/json/'.$ip));
             return property_exists($location, 'city') ? $location->city : false;
         }
         catch(Exception $e)

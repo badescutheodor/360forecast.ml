@@ -36,7 +36,8 @@ class Weather implements MessageComponentInterface
      * @param ConnectionInterface $connection
      */
     public function onOpen(ConnectionInterface $connection) {
-        note('info', sprintf('A new connection was made from IP: %s', $connection->remoteAddress));
+        print_r($connection->WebSocket->request->getHeaders());
+        note('info', sprintf('A new connection was made from IP: %s', $connection->WebSocket->request->getHeaders()['x-forwarded-for']));
         parse_str($connection->WebSocket->request->getQuery(), $parsed);
 
         /**
@@ -80,7 +81,7 @@ class Weather implements MessageComponentInterface
             $connection->remoteAddress = '94.231.116.134';
         }
 
-        $location = $this->getLocation($connection->remoteAddress);
+        $location = $this->getLocation($connection->WebSocket->request->getHeaders()['x-forwarded-for']);
         $response = $this->getWeather($identity, $location, 5);
         $connection->send(sanitize(Constants::SOCKET_ACTION_SEARCH, $response));
 
