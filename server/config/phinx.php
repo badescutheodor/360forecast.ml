@@ -11,11 +11,10 @@ return [
             'adapter'   => 'mysql',
             'host'      => getenv('DATABASE_HOST') ? getenv('DATABASE_HOST') : '127.0.0.1',
             'port'      => getenv('DATABASE_PORT') ? getenv('DATABASE_PORT') : 3306,
-            'name'      => getenv('DATABASE_NAME') ? getenv('DATABASE_NAME') : '360forecast.ml',
+            'name'      => getenv('DATABASE_NAME') ? getenv('DATABASE_NAME') : '360forecast',
             'user'      => getenv('DATABASE_USER') ? getenv('DATABASE_USER') : 'root',
-            'pass'      => getenv('DATABASE_PASSWORD') ? getenv('DATABASE_PORT') : '',
+            'pass'      => getenv('DATABASE_PASSWORD') ? getenv('DATABASE_PASSWORD') : 'ERNnfFh9Ax2PUn9NLnFW',
             'charset'   => 'utf8'
-
         ]
     ]
 ];
