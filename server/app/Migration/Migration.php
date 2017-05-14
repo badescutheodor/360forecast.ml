@@ -23,8 +23,14 @@ class Migration extends AbstractMigration
     public function init() {
         $this->capsule = new Capsule;
         $this->capsule->addConnection([
-            'driver' => 'sqlite',
-            'database' => '../../storage/database/database.sqlite'
+            'driver'    => 'mysql',
+            'host'      => getenv('DATABASE_HOST') ? getenv('DATABASE_HOST') : '127.0.0.1',
+            'port'      => getenv('DATABASE_PORT') ? getenv('DATABASE_PORT') : 3306,
+            'database'  => getenv('DATABASE_NAME') ? getenv('DATABASE_NAME') : '360forecast.ml',
+            'username'  => getenv('DATABASE_USER') ? getenv('DATABASE_USER') : 'root',
+            'password'  => getenv('DATABASE_PASSWORD') ? getenv('DATABASE_PORT') : '',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
         ]);
         $this->capsule->bootEloquent();
         $this->capsule->setAsGlobal();

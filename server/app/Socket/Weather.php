@@ -5,9 +5,9 @@ namespace App\Socket;
 use Pimple\Container;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
-use App\Socket\Authenticable;
+use App\Auth\Authenticable;
 use App\Socket\Weatherable;
-use App\Socket\Settings;
+use App\Auth\Settings;
 use App\Socket\Constants;
 
 class Weather implements MessageComponentInterface
@@ -37,64 +37,39 @@ class Weather implements MessageComponentInterface
      * @param ConnectionInterface $connection
      */
     public function onOpen(ConnectionInterface $connection) {
-        $ip = isset($connection->WebSocket->request->getHeaders()['x-forwarded-for']) ? $connection->WebSocket->request->getHeaders()['x-forwarded-for'] : $connection->remoteAddress;
+        $headers  = $connection->WebSocket->request->getHeaders();
+        $ip       = isset($headers['x-forwarded-for']) ? $headers['x-forwarded-for'] : $connection->remoteAddress;
 
-
-        note('info', sprintf('A new connection was made from IP: %s', $ip));
-        parse_str($connection->WebSocket->request->getQuery(), $parsed);
-
-        /**
-         * Set an identity if it does not
-         * have one already
-         */
-
-        if ( !isset($parsed["identity"]) )
-        {
-            note('info', sprintf("A new socket connection with resourceId [%s] was created, sending identity."), $connection->resourceId);
-            $identity = $this->makeIdentity();
-            $connection->send(sanitize(Constants::SOCKET_SET_IDENTIFICATION, $identity));
-            $connection->identifier = $identity;
-            return;
-        }
-
-        /**
-         * Try decoding the identity token,
-         * else send a new one
-         */
-
-        if ( $identity = $this->getIdentity($parsed['identity']) )
-        {
-            note('info', sprintf("User with identification [%s] has connected.", $identity));
-            $connection->identifier = $identity;
-        }
-        else
-        {
-            note('error', sprintf("Could not decrypt identity %s, sending a new one to user.", $parsed["identity"]));
-            $identity = $this->makeIdentity();
-            $connection->send(sanitize(Constants::SOCKET_SET_IDENTIFICATION, $identity));
-        }
+        $auth     = $this->authenticate($connection);
+        $isNew    = $auth[0];
+        $identity = $auth[1];
 
         /**
          * Send the initial weather data based
          * on user's IP
          */
 
-        echo $ip;
-
         if ( $ip == '127.0.0.1' )
         {
             $ip = '94.231.116.134';
         }
 
-        $location = $this->getLocation($ip);
-        $response = $this->getWeather($identity, $location, 5);
-        $connection->send(sanitize(Constants::SOCKET_ACTION_SEARCH, $response));
-
         /**
-         * Attach the connection
+         * Send the user settings
          */
+        if ( $isNew )
+        {
+            $this->makeSettings($identity);
+            $connection->send(sanitize(Constants::SOCKET_SET_SETTINGS, static::$settings));
+        }
+        else
+        {
+            $connection->send(sanitize(Constants::SOCKET_SET_SETTINGS, $this->getSettings($identity)));
+        }
 
-        $this->connections[$connection->resourceId] = $connection;
+        $location = $this->getLocation($ip);
+        $response = $this->getWeather($identity, $location);
+        $connection->send(sanitize(Constants::SOCKET_ACTION_SEARCH, $response));
     }
 
     /**
@@ -102,17 +77,32 @@ class Weather implements MessageComponentInterface
      * @param string $message
      */
     public function onMessage(ConnectionInterface $from, $message) {
-        $parsed = json_decode($message);
-        $event  = $parsed[0];
-        $data   = $parsed[1];
+        $parsed     = json_decode($message);
+        $event      = $parsed[0];
+        $data       = $parsed[1];
+        $identifier = $this->connections[$from->resourceId]->identifier;
 
         switch ( $event )
         {
             case Constants::SOCKET_ACTION_SEARCH:
             {
                 note('info', sprintf("Client with id %s is trying to search for %s.", $from->resourceId, $message));
-                $response = $this->getWeather($this->connections[$from->resourceId]->identifier, $data, 5);
+                $response = $this->getWeather($identifier, $data);
                 $from->send(sanitize(Constants::SOCKET_ACTION_SEARCH, $response));
+            } break;
+
+            case Constants::SOCKET_SET_SETTINGS:
+            {
+                note('info', sprintf("Client with id %s is updating settings.", $from->resourceId));
+                $response = $this->setSettings($identifier, $data);
+
+                if ( !$response )
+                {
+                    return;
+                }
+
+                $data->updated = true;
+                $from->send(sanitize(Constants::SOCKET_SET_SETTINGS, $data));
             } break;
 
             default:

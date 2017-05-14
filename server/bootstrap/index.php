@@ -72,7 +72,9 @@ class Application
          */
 
         $capsule = new Illuminate\Database\Capsule\Manager();
-        $capsule->addConnection($this->container['config']->get('sqlite'));
+        $driver  = getenv('DATABASE_DRIVER') ? getenv('DATABASE_DRIVER') : 'mysql';
+
+        $capsule->addConnection($this->container['config']->get($driver));
         $capsule->setAsGlobal();
         $capsule->bootEloquent();
 

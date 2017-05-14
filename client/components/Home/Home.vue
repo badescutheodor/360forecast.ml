@@ -22,7 +22,8 @@
         EVENT_HIDE_SEARCH,
         EVENT_HIDE_OVERLAY,
         SOCKET_ACTION_SEARCH,
-        EVENT_DATA_LOADED
+        EVENT_DATA_LOADED,
+        EVENT_SETTINGS_LOADED
     } from '../../constants'
 
     export default {
@@ -43,6 +44,7 @@
         methods: {
             bindSocket() {
                 let socket = this.$root.socket;
+
                 socket.on(SOCKET_ACTION_SEARCH, (data) => {
                     this.data = data;
                     events.$emit(EVENT_DATA_LOADED, data);

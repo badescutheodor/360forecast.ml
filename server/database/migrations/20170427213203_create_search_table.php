@@ -11,6 +11,7 @@ class CreateSearchTable extends Migration
             $table->increments('id');
             $table->string('identifier');
             $table->string('text');
+            $table->index(['identifier']);
             $table->timestamps();
         });
     }
