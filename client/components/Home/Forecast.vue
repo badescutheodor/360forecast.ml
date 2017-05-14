@@ -141,49 +141,62 @@
         display: flex;
         flex-wrap: wrap;
     }
+
+    .fade-enter-active {
+        transition: all .3s ease;
+    }
+    .fade-leave-active {
+        transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .fade-enter, .fade-leave-to {
+        transform: translateX(10px);
+        opacity: 0;
+    }
 </style>
 
 <template>
-    <div class="row forecast" v-if="!isLoading">
+    <div class="row forecast" v-show="!isLoading">
         <div class="col-lg-12">
             <button type="button" @click="showSettings" class="settings-button">
                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
             </button>
             <div class="heading">
                 <h3>Weather forecast</h3>
-                <p>5 days forecast</p>
+                <p>{{ days }} forecast</p>
             </div>
         </div>
         <div class="col-lg-12">
-            <div class="table grid">
-                <div class="day" v-for="(item, index) in items" v-bind:class="{'current': index === 0}">
-                    <div class="header">
-                        {{ item.day }}
-                    </div>
-                    <div class="weather">
-                        <i class="wi wi-day-snow icon"></i>
-                        {{ item.temperature }}
-                    </div>
-                    <div class="humidity">
-                        <i class="wi wi-humidity"></i>
-                        {{ item.humidity }}%
-                    </div>
-                    <div class="precipitations">
-                        <i class="wi wi-raindrop"></i>
-                        {{ item.rain }} mm
-                    </div>
-                    <div class="limits">
-                        <div class="min">
-                            <i class="wi wi-moonrise"></i>
-                            {{ item.min }} °C
+            <transition name="fade">
+                <div class="table grid" v-if="items.length">
+                    <div class="day" v-for="(item, index) in items" v-bind:class="{'current': index === 0}">
+                        <div class="header">
+                            {{ item.day }}
                         </div>
-                        <div class="max">
-                            <i class="wi wi-day-cloudy"></i>
-                            {{ item.max }} °C
+                        <div class="weather">
+                            <i class="wi wi-day-snow icon"></i>
+                            {{ item.temperature }}
+                        </div>
+                        <div class="humidity">
+                            <i class="wi wi-humidity"></i>
+                            {{ item.humidity }}%
+                        </div>
+                        <div class="precipitations">
+                            <i class="wi wi-raindrop"></i>
+                            {{ item.rain }} mm
+                        </div>
+                        <div class="limits">
+                            <div class="min">
+                                <i class="wi wi-moonrise"></i>
+                                {{ item.min }} °C
+                            </div>
+                            <div class="max">
+                                <i class="wi wi-day-cloudy"></i>
+                                {{ item.max }} °C
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </transition>
         </div>
     </div>
 </template>
@@ -196,16 +209,20 @@
     import {
         EVENT_DATA_LOADED,
         EVENT_SHOW_OVERLAY,
-        EVENT_SHOW_SETTINGS
+        EVENT_SHOW_SETTINGS,
+        SETTING_FORECAST_COUNT,
+        SOCKET_SET_SETTINGS
     } from '../../constants'
 
     export default {
         mounted() {
             events.$on(EVENT_DATA_LOADED, (data) => { this.loadData(data) });
+            events.$on(SOCKET_SET_SETTINGS, (data) => { this.setSettings(data) })
         },
 
         data() {
             return {
+                days: '5 days',
                 items: [],
                 isLoading: true
             }
@@ -214,6 +231,12 @@
             showSettings() {
                 events.$emit(EVENT_SHOW_OVERLAY);
                 events.$emit(EVENT_SHOW_SETTINGS);
+            },
+
+            setSettings(data) {
+                let count = data[SETTING_FORECAST_COUNT];
+                let days  = count > 1 ? `${count} days` : `${count} day`;
+                this.days = days;
             },
 
             loadData(data) {

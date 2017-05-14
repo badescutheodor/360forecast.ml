@@ -16,5 +16,10 @@ export const iconize = (id) => {
  * @param messaage
  */
 export const notify = (type, message) => {
-    new Noty({ type, text: message }).show();
+    new Noty({
+        type,
+        killer: true,
+        text: message,
+        timeout: 400
+    }).show();
 };

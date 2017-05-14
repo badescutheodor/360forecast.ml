@@ -4,7 +4,11 @@ import ToggleButton from 'vue-js-toggle-button'
 
 import { router } from './router'
 import { socket } from './socket'
-import { SOCKET_SET_IDENTIFICATION } from './constants'
+import events from './events'
+import {
+    SOCKET_SET_IDENTIFICATION,
+    SOCKET_SET_SETTINGS
+} from './constants'
 
 import Root from './components/Root.vue'
 import './styles/app.scss'
@@ -23,7 +27,8 @@ Vue.use(ToggleButton);
 
 const data = () => {
     return {
-        socket
+        socket,
+        settings: false
     }
 };
 
@@ -35,9 +40,19 @@ new Vue({
     router,
     data,
     mounted() {
-        this.socket.on(SOCKET_SET_IDENTIFICATION, identity => {
-            localStorage.setItem('identity', identity);
-        });
+        this.bindSocket();
+    },
+    methods: {
+        bindSocket() {
+            this.socket.on(SOCKET_SET_IDENTIFICATION, identity => {
+                localStorage.setItem('identity', identity);
+            });
+
+            this.socket.on(SOCKET_SET_SETTINGS, settings => {
+                this.settings = settings;
+                events.$emit(SOCKET_SET_SETTINGS, settings);
+            });
+        }
     },
     render: (h) => h(Root)
 }).$mount('#app');

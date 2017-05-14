@@ -12,6 +12,7 @@ class CreateSettingsTable extends Migration
             $table->string('identifier');
             $table->string('key');
             $table->string('value');
+            $table->index(['identifier', 'key']);
             $table->timestamps();
         });
     }
