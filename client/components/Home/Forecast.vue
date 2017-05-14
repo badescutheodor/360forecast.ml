@@ -22,6 +22,15 @@
                 margin-right: 7px;
                 border-top: 8px solid #00497d;
                 border-radius: 2px;
+                flex-grow: 1;
+                min-width: 19%;
+
+                @media (max-width: 884px) {
+                    & {
+                        min-width: 25%;
+                        margin-bottom: 9px;
+                    }
+                }
 
                 .header {
                     font-size: 19px;
@@ -105,13 +114,32 @@
         bottom: 8px;
         margin-right: 11px;
 
+        &:hover span {
+            animation: slow-rotate 4s .1s infinite;
+        }
+
         span {
             font-size: 19px;
         }
     }
 
+    @keyframes slow-rotate {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
     .settings-button, .heading {
         display: inline-block;
+    }
+
+    .grid {
+        display: flex;
+        flex-wrap: wrap;
     }
 </style>
 
@@ -127,7 +155,7 @@
             </div>
         </div>
         <div class="col-lg-12">
-            <div class="table">
+            <div class="table grid">
                 <div class="day" v-for="(item, index) in items" v-bind:class="{'current': index === 0}">
                     <div class="header">
                         {{ item.day }}

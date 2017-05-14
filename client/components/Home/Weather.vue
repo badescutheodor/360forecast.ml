@@ -10,7 +10,7 @@
         }
 
         .info {
-            padding-left: 23px;
+            padding-left: 11px;
             display: inline-block;
         }
 
@@ -62,18 +62,20 @@
             margin-top: 32px;
         }
 
-        button {
-            float: none !important;
-            display: block;
-            margin: 0 auto !important;
+        .info {
+            padding-left: 0 !important;
+
+            h1 {
+                margin-top: 0;
+            }
         }
     }
 </style>
 
 <template>
     <div class="row" v-if="!isLoading">
-        <div class="data col-lg-8 col-md-8 col-sm-8 col-xs-12">
-            <div class="weather-icon">
+        <div class="data col-lg-8 col-md-8 col-sm-8 col-xs-8">
+            <div class="weather-icon hidden-xs">
                 <i class="wi icon" v-bind:class="icon"></i>
             </div>
             <div class="info">
@@ -81,7 +83,7 @@
                 <p>{{ temperature }}</p>
             </div>
         </div>
-        <div class="search col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <div class="search col-lg-4 col-md-4 col-sm-4 col-xs-4">
             <button type="button" @click="showSearch">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
             </button>

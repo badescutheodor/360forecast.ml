@@ -15,6 +15,14 @@
         z-index: 3;
     }
 
+    @media only screen and (max-width : 768px) {
+        .modal-dialog {
+            margin: 0;
+            width: 100%;
+            padding: 0 5px;
+        }
+    }
+
     .modal-content {
         border-radius: 1px;
         border-color: transparent;
@@ -39,7 +47,6 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" @click="hideSettings">×</button>
                     <h4 class="modal-title">
                         <i class="glyphicon glyphicon-cog"></i>
                         Manage Settings
@@ -113,10 +120,6 @@
             saveSettings() {
                 events.$emit(EVENT_HIDE_OVERLAY);
                 this.isShown = false;
-
-                setTimeout(() => {
-                    notify('success', "testing");
-                }, 500);
             }
         }
     }
