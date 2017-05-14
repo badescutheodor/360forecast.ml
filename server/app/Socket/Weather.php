@@ -79,6 +79,8 @@ class Weather implements MessageComponentInterface
          * on user's IP
          */
 
+        echo $ip;
+
         if ( $ip == '127.0.0.1' )
         {
             $ip = '94.231.116.134';
