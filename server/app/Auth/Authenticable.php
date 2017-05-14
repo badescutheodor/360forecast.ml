@@ -39,7 +39,7 @@ trait Authenticable
 
         if ( !isset($parsed["identity"]) )
         {
-            note('info', sprintf("A new socket connection with resourceId [%s] was created, sending identity."), $connection->resourceId);
+            note('info', sprintf("A new socket connection with resourceId [%s] was created, sending identity.", $connection->resourceId));
             $isNew    = 1;
             $identity = $this->makeIdentity();
             $connection->send(sanitize(Constants::SOCKET_SET_IDENTIFICATION, $identity[1]));

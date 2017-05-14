@@ -4,6 +4,12 @@ body {
   position: relative;
 }
 
+@-moz-document url-prefix() {
+  body {
+    position: static;
+  }
+}
+
 .blurred {
   filter: blur(5px);
 }

@@ -25,6 +25,7 @@ export default class Socket {
     reconnect() {
         if ( this.socket )
         {
+            this.socket.close();
             delete this.socket;
         }
 
