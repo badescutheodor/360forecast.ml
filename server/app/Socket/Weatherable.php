@@ -36,10 +36,10 @@ trait Weatherable
             $errors = [];
         }
 
-        $search             = new Search;
+        /*$search             = new Search;
         $search->text       = $city;
         $search->identifier = $identity;
-        $search->save();
+        $search->save();*/
 
         return compact('status', 'errors', 'response');
     }

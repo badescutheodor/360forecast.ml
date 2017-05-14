@@ -2,7 +2,7 @@
  * Application constants
  * @type {string}
  */
-export const SOCKET_SERVER = 'ws://localhost:8080';
+export const SOCKET_SERVER = 'wss://360forecast.ml/socket';
 
 
 /**
