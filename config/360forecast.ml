@@ -21,7 +21,7 @@ server {
         allow all;
     }
 
-    location ~* \.(?:css|js)$ {
+    location ~* \.(?:css|js|ico|woff|eot|svg|ttf|otf|png|gif|jpe?g)$ {
       expires 1y;
       access_log off;
       add_header Cache-Control "immutable";
