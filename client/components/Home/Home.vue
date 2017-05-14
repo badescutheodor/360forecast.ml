@@ -28,7 +28,6 @@
 
     export default {
         mounted() {
-            this.$root.socket.reconnect();
             events.$on(EVENT_SHOW_OVERLAY, () => { this.showBlur(); });
             events.$on(EVENT_HIDE_SEARCH, () => { this.hideBlur(); });
             this.bindSocket();
